@@ -1,5 +1,5 @@
 name := "proxy-crawler"
-version := "1.0.0-SNAPSHOT"
+version := "1.0.0"
 organization := "org.crowdcrawler"
 description := "Crawling Free HTTP and SOCKS Proxies on Internet"
 organizationHomepage := Some(new URL("http://www.crowdcrawler.org"))
