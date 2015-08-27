@@ -1,9 +1,13 @@
+*~
 *.class
 *.log
+*.pyc
+sbt/*.jar
+project/*.lock
 
 # sbt specific
-.cache
-.history
+.cache/
+.history/
 .lib/
 dist/*
 target/
@@ -11,6 +15,12 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+
+# Intellj Idea specific
+.idea/
+.idea_modules/
+out/
+*.iml
 
 # Scala-IDE specific
 .scala_dependencies
