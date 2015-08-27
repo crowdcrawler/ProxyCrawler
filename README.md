@@ -1,4 +1,6 @@
 # ProxyCrawler [![Build Status](https://travis-ci.org/crowdcrawler/ProxyCrawler.png)](https://travis-ci.org/crowdcrawler/ProxyCrawler)
+
+[![Join the chat at https://gitter.im/crowdcrawler/ProxyCrawler](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/crowdcrawler/ProxyCrawler?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Crawl Free HTTP and SOCKS Proxies on Internet
 
 
