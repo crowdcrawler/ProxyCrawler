@@ -14,7 +14,7 @@ import scala.collection.JavaConversions._
  */
 final class USProxyOrgPlugin extends AbstractPlugin {
 
-  def seeds: List[URI] = List(new URI("http://www.us-proxy.org/"))
+  val seeds: List[URI] = List(new URI("http://www.us-proxy.org/"))
 
   def extract(html: String): List[ProxyInfo] = {
     val result = mutable.ListBuffer.empty[ProxyInfo]

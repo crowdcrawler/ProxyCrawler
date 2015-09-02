@@ -13,7 +13,7 @@ import scala.collection.mutable
  */
 final class IpcnOrgPlugin extends AbstractPlugin {
 
-  def seeds: List[URI] = List(
+  val seeds: List[URI] = List(
     new URI("http://proxy.ipcn.org/proxylist.html"),
     new URI("http://proxy.ipcn.org/proxylist2.html")
   )
@@ -38,5 +38,5 @@ final class IpcnOrgPlugin extends AbstractPlugin {
 
   def next(html: String): List[URI] = List()
 
-  override def responseCharset: Charset = Charset.forName("GB2312")
+  override val responseCharset: Charset = Charset.forName("GB2312")
 }

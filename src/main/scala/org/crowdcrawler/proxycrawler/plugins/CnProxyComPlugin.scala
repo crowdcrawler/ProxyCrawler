@@ -25,7 +25,7 @@ class CnProxyComPlugin extends AbstractPlugin {
     "c" -> "1"
   )
 
-  def seeds: List[URI] = {
+  val seeds: List[URI] = {
     List(
       new URI("http://www.cnproxy.com/proxy1.html"),
       new URI("http://www.cnproxy.com/proxy2.html"),
@@ -90,5 +90,5 @@ class CnProxyComPlugin extends AbstractPlugin {
 
   def next(html: String): List[URI] = List()
 
-  override def responseCharset: Charset = Charset.forName("GB2312")
+  override val responseCharset: Charset = Charset.forName("GB2312")
 }

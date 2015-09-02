@@ -15,7 +15,7 @@ import scala.collection.mutable
  */
 class GatherproxyComPlugin extends AbstractPlugin {
 
-  def seeds: List[URI] = List(new URI("http://gatherproxy.com/"))
+  val seeds: List[URI] = List(new URI("http://gatherproxy.com/"))
 
   def extract(html: String): List[ProxyInfo] = {
     val result = mutable.ListBuffer.empty[ProxyInfo]

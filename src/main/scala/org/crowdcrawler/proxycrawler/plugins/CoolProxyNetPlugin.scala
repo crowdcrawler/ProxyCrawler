@@ -16,7 +16,7 @@ import util.control.Breaks._
 class CoolProxyNetPlugin extends AbstractPlugin {
   private final val decoder: BASE64Decoder = new BASE64Decoder
 
-  def seeds: List[URI] = List(new URI("http://www.cool-proxy.net/proxies/http_proxy_list/page:1"))
+  val seeds: List[URI] = List(new URI("http://www.cool-proxy.net/proxies/http_proxy_list/page:1"))
 
   private def decryptIP(ip: String): String = {
     val base64Encoded = new StringBuilder
