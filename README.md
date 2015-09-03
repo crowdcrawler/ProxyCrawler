@@ -10,6 +10,7 @@ Crawl Free HTTP and SOCKS Proxies on Internet
 
     crawl [pluginClassName]* OutputFile
     check proxies.json valid_proxies.json
+    filter valid_proxies.json <HTTP|HTTPS|SOCKS> output.json
     
 For example:
 
@@ -24,6 +25,11 @@ For example:
 3. Check the speed of proxies.
 
 		check proxies.json valid_proxies.json
+
+4. Filter proxies by schema
+
+		filter valid_proxies.json HTTP http.json
+
 
 ## Load into IntelliJ Idea
 
