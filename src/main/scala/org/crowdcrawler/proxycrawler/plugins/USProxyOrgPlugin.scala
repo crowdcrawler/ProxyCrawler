@@ -25,9 +25,9 @@ final class USProxyOrgPlugin extends AbstractPlugin {
       val host = tds.get(0).text
       val port = Integer.valueOf(tds.get(1).text)
       val location = tds.get(3).text
-      val `type`= if (tds.get(6).text == "no") "HTTP" else "HTTPS"
+      val schema= if (tds.get(6).text == "no") "HTTP" else "HTTPS"
 
-      result += ProxyInfo(host, port, `type`, 0, location)
+      result += ProxyInfo(host, port, schema, 0, location, null)
     }
     result.toList
   }

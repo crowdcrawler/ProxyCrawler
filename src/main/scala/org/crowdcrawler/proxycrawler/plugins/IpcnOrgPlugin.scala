@@ -30,7 +30,7 @@ final class IpcnOrgPlugin extends AbstractPlugin {
         val host = splitted(0)
         val port = splitted(1).toInt
 
-        result += ProxyInfo(host, port, "HTTP", 0, null)
+        result += ProxyInfo(host, port, "HTTP", 0, null, null)
       }
     }
     result.toList

@@ -48,7 +48,7 @@ class ProxyCrawler(plugins: List[AbstractPlugin]) {
           ProxyCrawler.LOGGER.info("Crawling " + uri.toString)
           val html = ProxyCrawler.createRequest(uri, plugin.customizedHeaders).execute
             .returnContent.asString(plugin.responseCharset)
-          result ++= plugin.extract(html)
+          result ++= plugin.extract(html).map(p => ProxyInfo(p.host, p.port, p.schema, p.speed, p.location, uri))
 
           val nextURIs = plugin.next(html)
           nextURIs.filter(p => !existed.contains(p)).foreach(p => uris.enqueue(p))

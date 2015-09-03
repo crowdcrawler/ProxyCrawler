@@ -69,7 +69,7 @@ class CnProxyComPlugin extends AbstractPlugin {
 
           decryptPort(portStr)
         }
-        val `type` = tds.get(1).text
+        val schema = tds.get(1).text
         val speeds = tds.get(2).text
         val speed = {
           val splitted = speeds.split(",")
@@ -81,7 +81,7 @@ class CnProxyComPlugin extends AbstractPlugin {
           sum / splitted.length
         }
         val country = tds.get(3).text
-        val proxyInfo = ProxyInfo(host, port, `type`, speed, country)
+        val proxyInfo = ProxyInfo(host, port, schema, speed, country, null)
         result += proxyInfo
       }
     }

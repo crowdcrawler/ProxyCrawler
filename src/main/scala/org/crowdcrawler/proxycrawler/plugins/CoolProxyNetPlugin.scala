@@ -56,7 +56,7 @@ class CoolProxyNetPlugin extends AbstractPlugin {
         val port = tds.get(1).text.toInt
         val location = tds.get(3).text
         val speed = tds.get(8).text.toInt
-        result.add(ProxyInfo(host, port, "HTTP", speed, location))
+        result.add(ProxyInfo(host, port, "HTTP", speed, location, null))
       }
     }
     result.toList
