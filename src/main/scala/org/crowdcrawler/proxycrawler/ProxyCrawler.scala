@@ -100,13 +100,16 @@ object ProxyCrawler {
   def main(args: Array[String]): Unit = {
     val usage = "Usage: \n\tcrawl [pluginClassName]* OutputFile\n" +
       "\tcheck proxies.json valid_proxies.json\n" +
+      "\tfilter valid_proxies.json <HTTP|HTTPS|SOCKS> output.json\n" +
       "For example:\n" +
       "\t1. Crawl all supported websites and save proxies to proxies.json\n" +
       "\t\tcrawl proxies.json\n" +
       "\t2. Crawl www.cnproxy.com and save proxies to proxies.json:\n" +
       "\t\tcrawl CnProxyComPlugin proxies.json\n" +
       "\t3. Check the speed of proxies.\n" +
-      "\t\tcheck proxies.json valid_proxies.json\n"
+      "\t\tcheck proxies.json valid_proxies.json\n" +
+      "\t4. Filter proxies by schema\n" +
+      "\t\tfilter valid_proxies.json HTTP http.json\n"
     if (args.length < 2) {
       println(usage)
       return
@@ -139,6 +142,18 @@ object ProxyCrawler {
         .writeValueAsString(validProxies)
       Files.write(Paths.get(args(2)), newJson.getBytes(StandardCharsets.UTF_8))
 
+    } else if (args(0) == "filter") {
+      val json = io.Source.fromFile(args(1), "utf-8").mkString
+      val list = OBJECT_MAPPER.readValue[List[ProxyInfo]](json)
+      val filtered = if (args(2) == "SOCKS") {
+        list.filter(p => p.schema == "SOCKS" | p.schema == "SOCKS4" || p.schema == "SOCKS5")
+      } else {
+        list.filter(p => p.schema == args(2))
+      }
+
+      val newJson = ProxyCrawler.OBJECT_MAPPER.writerWithDefaultPrettyPrinter
+        .writeValueAsString(filtered)
+      Files.write(Paths.get(args(3)), newJson.getBytes(StandardCharsets.UTF_8))
     } else {
       println(usage)
       return
