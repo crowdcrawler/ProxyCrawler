@@ -2,9 +2,14 @@ package org.crowdcrawler.proxycrawler
 
 import java.io.IOException
 import java.net.URI
+import java.security.cert.X509Certificate
 
 import com.typesafe.scalalogging.Logger
-import org.apache.http.client.fluent.Request
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.ssl.{TrustStrategy, SSLContexts}
+import org.apache.http.conn.ssl.{NoopHostnameVerifier, SSLConnectionSocketFactory}
+import org.apache.http.util.EntityUtils
 import org.crowdcrawler.proxycrawler.plugins.AbstractPlugin
 import scala.collection.immutable
 
@@ -46,16 +51,21 @@ class ProxyCrawler(plugins: List[AbstractPlugin]) {
         existed.add(uri)
         try {
           ProxyCrawler.LOGGER.info("Crawling " + uri.toString)
-          val html = ProxyCrawler.createRequest(uri, plugin.customizedHeaders).execute
-            .returnContent.asString(plugin.responseCharset)
-          result ++= plugin.extract(html).map(p => ProxyInfo(p.host, p.port, p.schema, p.speed, p.location, uri))
+          val response = ProxyCrawler.CLIENT.execute(ProxyCrawler.createRequest(uri, plugin.customizedHeaders))
+          val statusCode = response.getStatusLine.getStatusCode
+          if (statusCode == 200) {
+            val html = EntityUtils.toString(response.getEntity, plugin.responseCharset)
 
-          val nextURIs = plugin.next(html)
-          nextURIs.filter(p => !existed.contains(p)).foreach(p => uris.enqueue(p))
-        } catch {
-          case e: IOException => {
-            ProxyCrawler.LOGGER.error("Error crawling " + uri.toString + ", skipped", e)
+            result ++= plugin.extract(html).map(p => ProxyInfo(p.host, p.port, p.schema, p.speed, p.location, uri))
+
+            val nextURIs = plugin.next(html)
+            nextURIs.filter(p => !existed.contains(p)).foreach(p => uris.enqueue(p))
+          } else {
+            ProxyCrawler.LOGGER.warn("statusCode = " + statusCode + ", " + uri + " skipped")
           }
+        } catch {
+          case e: IOException =>
+            ProxyCrawler.LOGGER.error("Error crawling " + uri.toString + ", skipped", e)
         }
       }
     }
@@ -79,6 +89,14 @@ object ProxyCrawler {
 
   private val LOGGER = Logger(LoggerFactory.getLogger(classOf[ProxyCrawler]))
 
+  private val CLIENT = {
+    val sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+      def isTrusted(chain: Array[X509Certificate], authType: String) = true
+    }).build()
+    val connectionFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE)
+    HttpClients.custom().setSSLSocketFactory(connectionFactory).build()
+  }
+
   def apply(classNames: String*): ProxyCrawler = {
     val plugins = mutable.ListBuffer.empty[AbstractPlugin]
     for (className <- classNames) {
@@ -88,8 +106,8 @@ object ProxyCrawler {
     new ProxyCrawler(plugins.toList)
   }
 
-  private def createRequest(uri: URI, headers: immutable.Map[String, String]): Request = {
-    val request = Request.Get(uri)
+  private def createRequest(uri: URI, headers: immutable.Map[String, String]): HttpGet = {
+    val request = new HttpGet(uri)
     for (header <- headers) {
       request.setHeader(header._1, header._2)
     }
@@ -119,7 +137,7 @@ object ProxyCrawler {
     if (args(0) == "crawl") {
       val classNames = if (args.length == 2) {
         Array("CnProxyComPlugin", "CoolProxyNetPlugin", "GatherproxyComPlugin", "IpcnOrgPlugin",
-          "USProxyOrgPlugin")
+          "ProxyListOrg", "SocksProxyNet", "USProxyOrgPlugin")
       } else {
         args.slice(1, args.length-1)
       }

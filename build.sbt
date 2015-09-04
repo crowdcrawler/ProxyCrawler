@@ -36,6 +36,6 @@ libraryDependencies ++= {
     "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
     "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
     "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % jacksonVersion,
-    "org.apache.httpcomponents" % "fluent-hc" % httpClientVersion
+    "org.apache.httpcomponents" % "httpclient" % httpClientVersion
   )
 }

@@ -4,7 +4,8 @@ import java.io.IOException
 import java.net
 import java.net.{Socket, InetSocketAddress, SocketTimeoutException, URI}
 import java.nio.charset.StandardCharsets
-import javax.net.ssl.SSLContext
+import java.security.cert.X509Certificate
+import javax.net.ssl.{HostnameVerifier, SSLContext}
 
 import com.typesafe.scalalogging.Logger
 import org.apache.http.client.config.RequestConfig
@@ -12,11 +13,11 @@ import org.apache.http.client.protocol.HttpClientContext
 import org.apache.http.config.RegistryBuilder
 import org.apache.http.conn.ConnectTimeoutException
 import org.apache.http.conn.socket.{PlainConnectionSocketFactory, ConnectionSocketFactory}
-import org.apache.http.conn.ssl.{TrustSelfSignedStrategy, SSLConnectionSocketFactory}
+import org.apache.http.conn.ssl.{NoopHostnameVerifier, SSLConnectionSocketFactory}
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.apache.http.protocol.HttpContext
-import org.apache.http.ssl.SSLContexts
+import org.apache.http.ssl.{TrustStrategy, SSLContexts}
 import org.apache.http.util.EntityUtils
 import org.apache.http.{HttpVersion, HttpHost}
 import org.apache.http.client.methods.HttpGet
@@ -32,7 +33,8 @@ object ProxyChecker {
     }
   }
 
-  private class MyHttpsConnectionSocketFactory(sslContext: SSLContext) extends SSLConnectionSocketFactory(sslContext) {
+  private class MyHttpsConnectionSocketFactory(sslContext: SSLContext, verifier: HostnameVerifier)
+    extends SSLConnectionSocketFactory(sslContext) {
     override def createSocket(context: HttpContext): Socket = {
       val socksaddr = context.getAttribute("socks.address").asInstanceOf[InetSocketAddress]
       val proxy = new net.Proxy(net.Proxy.Type.SOCKS, socksaddr)
@@ -52,15 +54,13 @@ object ProxyChecker {
   val CLIENT_HTTP  = HttpClients.createMinimal()
   /** HTTP client for SOCKS proxies. */
   val CLIENT_SOCKS = {
-    val sSLContext = {
-      val builder = SSLContexts.custom()
-      builder.loadTrustMaterial(null, new TrustSelfSignedStrategy())
-      builder.build()
-    }
+    val sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+      def isTrusted(chain: Array[X509Certificate], authType: String) = true
+    }).build()
 
     val reg = RegistryBuilder.create[ConnectionSocketFactory]()
       .register("http", new MyHttpConnectionSocketFactory())
-      .register("https", new MyHttpsConnectionSocketFactory(sSLContext))
+      .register("https", new MyHttpsConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE))
       .build()
     val cm = new PoolingHttpClientConnectionManager(reg)
     HttpClients.custom().setConnectionManager(cm).build()
@@ -99,6 +99,7 @@ object ProxyChecker {
         val socksaddr = new InetSocketAddress(proxyInfo.host, proxyInfo.port)
         val context = HttpClientContext.create()
         context.setAttribute("socks.address", socksaddr)
+        context.setRequestConfig(REQUEST_CONFIG)
         context
       case whoa => throw new IllegalArgumentException("Unsupported schema " + whoa)
     }
