@@ -57,11 +57,3 @@ class ProxyListOrg extends AbstractPlugin {
     result.toList
   }
 }
-
-object ProxyListOrg {
-  def main(args: Array[String]) : Unit = {
-    val tmp = new ProxyListOrg
-    val html = io.Source.fromFile(args(0), "utf-8").mkString
-    println(tmp.extract(html))
-  }
-}
