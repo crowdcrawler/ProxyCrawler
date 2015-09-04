@@ -20,11 +20,11 @@ class CoolProxyNetPlugin extends AbstractPlugin {
 
   private def decryptIP(ip: String): String = {
     val base64Encoded = new StringBuilder
-    val lowerCase = ip.toLowerCase
-    for (ch <- lowerCase) {
+
+    for (ch <- ip) {
       val newChar =
         if (Character.isAlphabetic(ch)) {
-          if (ch < 'n') (ch + 13).toChar else (ch - 13).toChar
+          if (ch.toLower < 'n') (ch + 13).toChar else (ch - 13).toChar
         } else {
           ch
         }
