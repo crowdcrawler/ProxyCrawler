@@ -7,7 +7,7 @@ import org.crowdcrawler.proxycrawler.ProxyCrawler
 import org.crowdcrawler.proxycrawler.ProxyInfo
 
 /**
- * One website one plugin.
+ * One plugin per website.
  */
 trait AbstractPlugin {
   /**

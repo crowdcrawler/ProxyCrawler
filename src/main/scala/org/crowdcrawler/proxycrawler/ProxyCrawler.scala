@@ -90,6 +90,7 @@ object ProxyCrawler {
   private val LOGGER = Logger(LoggerFactory.getLogger(classOf[ProxyCrawler]))
 
   private val CLIENT = {
+    // trust all certificates including self-signed certificates
     val sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
       def isTrusted(chain: Array[X509Certificate], authType: String) = true
     }).build()
@@ -145,7 +146,7 @@ object ProxyCrawler {
 
       val proxies = crawler.crawl()
 
-      LOGGER.info("Writing to disk")
+      LOGGER.info("Writing to disk, " + proxies.size + " proxies")
       val json = OBJECT_MAPPER.writerWithDefaultPrettyPrinter.writeValueAsString(proxies)
       Files.write(Paths.get(args.last), json.getBytes(StandardCharsets.UTF_8))
     } else if (args(0) == "check") {
@@ -155,7 +156,7 @@ object ProxyCrawler {
       // sort by speed desc
       val validProxies = ProxyChecker.check(list).filter(_.speed > 0)
         .sortWith((p1, p2) => p1.speed > p2.speed)
-      LOGGER.info("Writing to disk")
+      LOGGER.info("Writing to disk, " + validProxies.size + " valid proxies out of " + list.size + " proxies")
       val newJson = ProxyCrawler.OBJECT_MAPPER.writerWithDefaultPrettyPrinter
         .writeValueAsString(validProxies)
       Files.write(Paths.get(args(2)), newJson.getBytes(StandardCharsets.UTF_8))
