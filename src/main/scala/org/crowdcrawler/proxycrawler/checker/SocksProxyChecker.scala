@@ -57,7 +57,6 @@ object SocksProxyChecker extends AbstractProxyChecker {
       val socksAddress = new InetSocketAddress(host, port)
       val context = HttpClientContext.create()
       context.setAttribute("socks.address", socksAddress)
-      context.setRequestConfig(AbstractProxyChecker.REQUEST_CONFIG)
       context
     }
 
