@@ -21,7 +21,7 @@ trait AbstractProxyChecker {
 
 
 private[checker] object AbstractProxyChecker {
-  val TIMEOUT = 10000  // 10000 milliseconds
+  val TIMEOUT = 30000  // 30000 milliseconds
   val MAX_CONN = 100000
   val REQUEST_CONFIG = RequestConfig.custom.setConnectTimeout(TIMEOUT).setSocketTimeout(TIMEOUT)
     .setRedirectsEnabled(false).setRelativeRedirectsAllowed(false).setCircularRedirectsAllowed(false)

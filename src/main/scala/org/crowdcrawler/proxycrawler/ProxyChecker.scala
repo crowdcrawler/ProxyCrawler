@@ -9,6 +9,9 @@ import org.apache.http.conn.ConnectTimeoutException
 import org.crowdcrawler.proxycrawler.checker.{SocksProxyChecker, HttpsProxyChecker, HttpProxyChecker}
 import org.slf4j.LoggerFactory
 
+import scala.collection.parallel.ForkJoinTaskSupport
+import scala.concurrent.forkjoin.ForkJoinPool
+
 
 @ThreadSafe
 object ProxyChecker {
@@ -16,7 +19,11 @@ object ProxyChecker {
 
 
   /** Check the proxy and return new speed. */
-  def check(proxies: List[ProxyInfo]) : List[ProxyInfo] = proxies.par.map(check).toList
+  def check(proxies: List[ProxyInfo]) : List[ProxyInfo] = {
+    val parList = proxies.par
+    parList.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(parList.tasksupport.parallelismLevel * 16))
+    parList.map(check).toList
+  }
 
 
   /**
