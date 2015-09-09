@@ -10,6 +10,7 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.ssl.{TrustStrategy, SSLContexts}
 import org.apache.http.conn.ssl.{NoopHostnameVerifier, SSLConnectionSocketFactory}
 import org.apache.http.util.EntityUtils
+import org.crowdcrawler.proxycrawler.checker.ProxyChecker
 import org.crowdcrawler.proxycrawler.plugins.AbstractPlugin
 import scala.collection.immutable
 

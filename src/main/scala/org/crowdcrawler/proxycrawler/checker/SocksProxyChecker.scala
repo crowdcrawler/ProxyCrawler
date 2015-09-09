@@ -18,7 +18,7 @@ import org.apache.http.util.EntityUtils
 
 
 @ThreadSafe
-object SocksProxyChecker extends AbstractProxyChecker {
+private[checker] object SocksProxyChecker extends AbstractProxyChecker {
   private class MyHttpConnectionSocketFactory extends PlainConnectionSocketFactory {
     override def createSocket(context: HttpContext): Socket = {
       val socksAddress = context.getAttribute("socks.address").asInstanceOf[InetSocketAddress]

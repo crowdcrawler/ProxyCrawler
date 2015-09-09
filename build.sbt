@@ -28,6 +28,7 @@ libraryDependencies ++= {
   val httpClientVersion = "4.5"
   val jacksonVersion      = "2.6.1"
   val scalaTestVersion    = "3.0.0-SNAP5"
+  val akkaVersion       = "2.4.0-RC2"
   Seq(
     "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
     "org.jsoup" % "jsoup" % jsoupVersion,
@@ -36,6 +37,8 @@ libraryDependencies ++= {
     "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
     "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
     "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % jacksonVersion,
-    "org.apache.httpcomponents" % "httpclient" % httpClientVersion
+    "org.apache.httpcomponents" % "httpclient" % httpClientVersion,
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
   )
 }
