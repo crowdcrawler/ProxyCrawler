@@ -14,7 +14,7 @@ import org.apache.http.util.EntityUtils
 
 
 @ThreadSafe
-object HttpsProxyChecker extends AbstractProxyChecker {
+private[checker] object HttpsProxyChecker extends AbstractProxyChecker {
   // trust all certificates including self-signed certificates
   private[checker] val SSL_CONTEXT = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
     def isTrusted(chain: Array[X509Certificate], authType: String) = true

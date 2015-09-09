@@ -1,4 +1,4 @@
-package org.crowdcrawler.proxycrawler
+package org.crowdcrawler.proxycrawler.checker
 
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -6,7 +6,7 @@ import java.net.SocketTimeoutException
 import com.typesafe.scalalogging.Logger
 import org.apache.http.annotation.ThreadSafe
 import org.apache.http.conn.ConnectTimeoutException
-import org.crowdcrawler.proxycrawler.checker.{SocksProxyChecker, HttpsProxyChecker, HttpProxyChecker}
+import org.crowdcrawler.proxycrawler.ProxyInfo
 import org.slf4j.LoggerFactory
 
 import scala.collection.parallel.ForkJoinTaskSupport

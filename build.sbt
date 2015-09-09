@@ -20,7 +20,7 @@ resolvers ++= Seq(
 // sbt-assembly settings for building a fat jar
 // Slightly cleaner jar name
 assemblyJarName in assembly := name.value + "-" + version.value + ".jar"
-mainClass in assembly := Some("org.crowdcrawler.proxycrawler.ProxyCrawler")
+mainClass in assembly := Some("org.crowdcrawler.proxycrawler.Main")
 
 
 libraryDependencies ++= {

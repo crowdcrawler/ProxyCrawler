@@ -8,7 +8,7 @@ import org.apache.http.client.methods.HttpGet
 import org.crowdcrawler.proxycrawler.ProxyCrawler
 
 
-trait AbstractProxyChecker {
+private[checker] trait AbstractProxyChecker {
   /**
    * Check whether a proxy is valid.
    * @param host hostname or IP address

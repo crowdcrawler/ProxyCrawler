@@ -1,4 +1,4 @@
-package org.crowdcrawler.proxycrawler.plugins
+package org.crowdcrawler.proxycrawler.crawler.plugins
 
 import org.crowdcrawler.proxycrawler.ProxyInfo
 import org.jsoup.Jsoup

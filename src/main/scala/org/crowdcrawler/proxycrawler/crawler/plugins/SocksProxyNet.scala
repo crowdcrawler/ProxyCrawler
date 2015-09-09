@@ -1,20 +1,18 @@
-package org.crowdcrawler.proxycrawler.plugins
+package org.crowdcrawler.proxycrawler.crawler.plugins
+
+import java.net.URI
 
 import org.crowdcrawler.proxycrawler.ProxyInfo
 import org.jsoup.Jsoup
-import java.net.URI
 
 import scala.collection.mutable
 import scala.collection.JavaConversions._
 
-
-
 /**
- * For <a href="http://www.us-proxy.org/">us-proxy.org</a>.
+ * For <a href="http://www.socks-proxy.net/">socks-proxy.net</a>
  */
-final class USProxyOrgPlugin extends AbstractPlugin {
-
-  val seeds: List[URI] = List(new URI("http://www.us-proxy.org/"))
+class SocksProxyNet extends AbstractPlugin {
+  val seeds: List[URI] = List(new URI("http://www.socks-proxy.net/"))
 
   def extract(html: String): List[ProxyInfo] = {
     val result = mutable.ListBuffer.empty[ProxyInfo]
@@ -25,7 +23,7 @@ final class USProxyOrgPlugin extends AbstractPlugin {
       val host = tds.get(0).text
       val port = tds.get(1).text.toInt
       val location = tds.get(3).text
-      val schema= if (tds.get(6).text == "no") "HTTP" else "HTTPS"
+      val schema= tds.get(4).text.toUpperCase
 
       result += ProxyInfo(host, port, schema, 0, location, null)
     }
